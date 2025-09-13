@@ -16,6 +16,9 @@
   const minutes = [0, 15, 30, 45];
   const ampm = ['AM', 'PM'];
 
+  // 갤러리용 상태
+  let galleryImages = $state([]);
+
   // 15분 단위 타임슬롯 생성 (9:00~20:00)
   function pad(n) { return n < 10 ? '0'+n : n; }
   const timeSlots = [];
@@ -51,6 +54,10 @@
     if (data.slug === 'timetable') {
       const saved = localStorage.getItem('timetable');
       if (saved) timetable = JSON.parse(saved);
+    }
+    if (data.slug === 'gallery') {
+      const saved = localStorage.getItem('galleryImages');
+      if (saved) galleryImages = JSON.parse(saved);
     }
   });
 
@@ -114,6 +121,24 @@
       const sEnd = timeToMinutes(s.end);
       return sStart < cellEnd && sEnd > cellStart;
     });
+  }
+
+  // 갤러리 이미지 업로드/삭제
+  function onImageUpload(event) {
+    const files = Array.from(event.target.files);
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        galleryImages = [...galleryImages, e.target.result];
+        localStorage.setItem('galleryImages', JSON.stringify(galleryImages));
+      };
+      reader.readAsDataURL(file);
+    });
+    event.target.value = '';
+  }
+  function removeImage(idx) {
+    galleryImages = galleryImages.filter((_, i) => i !== idx);
+    localStorage.setItem('galleryImages', JSON.stringify(galleryImages));
   }
 </script>
 
@@ -190,6 +215,25 @@
     <button type="submit">추가</button>
   </form>
   <p style="opacity:.6">브라우저 로컬에 저장됩니다.</p>
+{/if}
+
+{#if data.slug === 'gallery'}
+  <div class="card">
+    <h3>이미지 업로드</h3>
+    <input type="file" accept="image/*" multiple on:change={onImageUpload} />
+    <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:1rem;">
+      {#each galleryImages as img, idx}
+        <div style="position:relative;">
+          <img src={img} alt="gallery" style="width:120px; height:120px; object-fit:cover; border-radius:8px; border:1px solid #ccc;" />
+          <button on:click={() => removeImage(idx)} style="position:absolute;top:2px;right:2px;font-size:12px;">삭제</button>
+        </div>
+      {/each}
+      {#if galleryImages.length === 0}
+        <p style="opacity:.6">아직 업로드된 이미지가 없습니다.</p>
+      {/if}
+    </div>
+    <p style="opacity:.6">이미지는 브라우저에만 저장됩니다.</p>
+  </div>
 {/if}
 
 {#if data.slug === 'memo'}
