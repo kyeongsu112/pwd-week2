@@ -21,7 +21,6 @@
 </main>
 
 <style global>
-<style global>
   @import '../app.css';
   .main-nav {
     display: flex;
