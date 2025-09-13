@@ -18,6 +18,7 @@
 
   // 갤러리용 상태
   let galleryImages = $state([]);
+  let gallerySize = $state(140);
 
   // 15분 단위 타임슬롯 생성 (9:00~20:00)
   function pad(n) { return n < 10 ? '0'+n : n; }
@@ -87,16 +88,14 @@
       alert('시간을 올바르게 입력하세요 (9:00~20:45, 시작 < 끝)');
       return;
     }
-    timetable = [
-      ...timetable,
-      {
-        subject: newSubject.subject,
-        room: newSubject.room,
-        day: newSubject.day,
-        start, end,
-        color: newSubject.color
-      }
-    ];
+    // 여러 과목을 넣을 수 있도록 timetable 배열에 계속 추가
+    timetable = [...timetable, {
+      subject: newSubject.subject,
+      room: newSubject.room,
+      day: newSubject.day,
+      start, end,
+      color: newSubject.color
+    }];
     saveTimetable();
     newSubject = {
       subject: '', room: '', day: 1,
@@ -221,10 +220,15 @@
   <div class="card">
     <h3>이미지 업로드</h3>
     <input type="file" accept="image/*" multiple on:change={onImageUpload} class="main-btn" />
+    <label style="display:block;margin:1em 0 0.5em 0;">
+      이미지 크기:
+      <input type="range" min="60" max="300" bind:value={gallerySize} style="width:150px;vertical-align:middle;" />
+      <span>{gallerySize}px</span>
+    </label>
     <div class="gallery-grid">
       {#each galleryImages as img, idx}
-        <div class="gallery-thumb">
-          <img src={img} alt="gallery" />
+        <div class="gallery-thumb" style={`width:${gallerySize}px;height:${gallerySize}px`}>
+          <img src={img} alt="gallery" style={`width:${gallerySize}px;height:${gallerySize-40}px`} />
           <button class="main-btn small" on:click={() => removeImage(idx)}>삭제</button>
         </div>
       {/each}
@@ -235,26 +239,8 @@
     <p style="opacity:.6">이미지는 브라우저에만 저장됩니다.</p>
   </div>
 {/if}
-  {#if data.slug === 'gallery'}
-    <div class="card">
-      <h3>이미지 업로드</h3>
-      <input type="file" accept="image/*" multiple on:change={onImageUpload} class="main-btn" />
-      <div class="gallery-grid">
-        {#each galleryImages as img, idx}
-          <div class="gallery-thumb">
-            <img src={img} alt="gallery" />
-            <button class="main-btn small" on:click={() => removeImage(idx)}>삭제</button>
-          </div>
-        {/each}
-        {#if galleryImages.length === 0}
-          <p style="opacity:.6">아직 업로드된 이미지가 없습니다.</p>
-        {/if}
-      </div>
-      <p style="opacity:.6">이미지는 브라우저에만 저장됩니다.</p>
-    </div>
-  {/if}
 
-  <style>
+<style>
   .gallery-grid {
     display: flex;
     flex-wrap: wrap;
@@ -263,8 +249,6 @@
   }
   .gallery-thumb {
     position: relative;
-    width: 140px;
-    height: 140px;
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 2px 8px #0002;
@@ -273,20 +257,20 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    transition: width 0.2s, height 0.2s;
   }
   .gallery-thumb img {
-    width: 100%;
-    height: 100px;
     object-fit: cover;
     border-radius: 10px 10px 0 0;
     border-bottom: 1px solid #eee;
+    transition: width 0.2s, height 0.2s;
   }
   .gallery-thumb .main-btn.small {
     font-size: 0.9em;
     padding: 0.3em 1em;
     margin: 8px 0 0 0;
   }
-  </style>
+</style>
 
 {#if data.slug === 'memo'}
   <textarea rows="6" bind:value={memo} class="card" style="width:100%"></textarea>
