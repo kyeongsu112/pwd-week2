@@ -8,9 +8,7 @@
     const saved = localStorage.getItem('homeName');
     if (saved) name = saved;
   });
-  $effect(() => {
-    localStorage.setItem('homeName', name);
-  }, [name]);
+  $: localStorage.setItem('homeName', name);
 
   function randomize() {
     const msgs = [
