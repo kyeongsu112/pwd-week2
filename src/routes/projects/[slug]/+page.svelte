@@ -220,12 +220,12 @@
 {#if data.slug === 'gallery'}
   <div class="card">
     <h3>이미지 업로드</h3>
-    <input type="file" accept="image/*" multiple on:change={onImageUpload} />
-    <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:1rem;">
+    <input type="file" accept="image/*" multiple on:change={onImageUpload} class="main-btn" />
+    <div class="gallery-grid">
       {#each galleryImages as img, idx}
-        <div style="position:relative;">
-          <img src={img} alt="gallery" style="width:120px; height:120px; object-fit:cover; border-radius:8px; border:1px solid #ccc;" />
-          <button on:click={() => removeImage(idx)} style="position:absolute;top:2px;right:2px;font-size:12px;">삭제</button>
+        <div class="gallery-thumb">
+          <img src={img} alt="gallery" />
+          <button class="main-btn small" on:click={() => removeImage(idx)}>삭제</button>
         </div>
       {/each}
       {#if galleryImages.length === 0}

@@ -3,6 +3,15 @@
   let name = $state('');
   let welcome = $derived(name ? `Hello, ${name}!` : 'Welcome!');
 
+  // 이름을 localStorage에 저장하고 불러오기
+  $effect(() => {
+    const saved = localStorage.getItem('homeName');
+    if (saved) name = saved;
+  });
+  $effect(() => {
+    localStorage.setItem('homeName', name);
+  }, [name]);
+
   function randomize() {
     const msgs = [
       '오늘도 멋진 하루 보내세요!',
@@ -15,13 +24,7 @@
   }
 </script>
 
-<!-- 네비게이션 버튼(크고 넓게) -->
-<nav class="main-nav">
-  <a class="nav-btn" href="/">Home</a>
-  <a class="nav-btn" href="/about">About</a>
-  <a class="nav-btn" href="/projects">Projects</a>
-  <a class="nav-btn" href="/contact">Contact</a>
-</nav>
+<!-- 상단 네비게이션은 layout에서 렌더링되므로 홈에서는 nav를 제거합니다. -->
 
 <section class="card" style="text-align:center;">
   <h1>{welcome}</h1>
