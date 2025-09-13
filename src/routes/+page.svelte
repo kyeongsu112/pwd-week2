@@ -5,10 +5,7 @@
 
   // 이름을 localStorage에 저장하고 불러오기
   $effect(() => {
-    const saved = localStorage.getItem('homeName');
-    if (saved) name = saved;
   });
-  $: localStorage.setItem('homeName', name);
 
   function randomize() {
     const msgs = [
