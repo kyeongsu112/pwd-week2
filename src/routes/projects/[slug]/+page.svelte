@@ -235,6 +235,58 @@
     <p style="opacity:.6">이미지는 브라우저에만 저장됩니다.</p>
   </div>
 {/if}
+  {#if data.slug === 'gallery'}
+    <div class="card">
+      <h3>이미지 업로드</h3>
+      <input type="file" accept="image/*" multiple on:change={onImageUpload} class="main-btn" />
+      <div class="gallery-grid">
+        {#each galleryImages as img, idx}
+          <div class="gallery-thumb">
+            <img src={img} alt="gallery" />
+            <button class="main-btn small" on:click={() => removeImage(idx)}>삭제</button>
+          </div>
+        {/each}
+        {#if galleryImages.length === 0}
+          <p style="opacity:.6">아직 업로드된 이미지가 없습니다.</p>
+        {/if}
+      </div>
+      <p style="opacity:.6">이미지는 브라우저에만 저장됩니다.</p>
+    </div>
+  {/if}
+
+  <style>
+  .gallery-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 1rem;
+  }
+  .gallery-thumb {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px #0002;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .gallery-thumb img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px 10px 0 0;
+    border-bottom: 1px solid #eee;
+  }
+  .gallery-thumb .main-btn.small {
+    font-size: 0.9em;
+    padding: 0.3em 1em;
+    margin: 8px 0 0 0;
+  }
+  </style>
 
 {#if data.slug === 'memo'}
   <textarea rows="6" bind:value={memo} class="card" style="width:100%"></textarea>
