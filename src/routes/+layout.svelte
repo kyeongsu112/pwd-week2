@@ -9,7 +9,6 @@
   <meta name="description" content="SvelteKit + Vercel mini portfolio" />
 </svelte:head>
 
-<nav>
 <nav class="main-nav">
   <a class="nav-btn" href="/">Home</a>
   <a class="nav-btn" href="/about">About</a>
